@@ -1,3 +1,7 @@
+//Vivado HLS code for implementing LSTM network which has three layers with 32-32-1 nodes in each layer respectively
+//weights are includes in the code.
+
+
 #include<cmath>
 void lstmipinside(float* arr, float *out_put) {
 #pragma HLS INTERFACe s_axilite port=return

@@ -5,8 +5,6 @@
 #include<cmath>
 void lstmipinside(float* arr, float *out_put) {
 #pragma HLS INTERFACe s_axilite port=return
-
-
 #pragma HLS INTERFACE m_axi depth=256 port=arr offset=slave bundle=arr_port
 #pragma HLS INTERFACE s_axilite port=arr
 #pragma HLS INTERFACE m_axi depth=256 port=out_put offset=slave bundle=out_put_port
@@ -20,8 +18,8 @@ int hidden_size1 =32;
     float corin[5];
     float corout[10];
  float out_put_temp[100];
-    float gates1[hidden_size1 * 4];
-    float gates2[hidden_size2 * 4];
+    float gates1[hidden_size1 * 4];// for storing the gate values of layer 1 
+    float gates2[hidden_size2 * 4];// for storing the gate values of layer 2
 float Wi1[33][32];
 float Wf1[33][32];
 float Wg1[33][32];
@@ -105,13 +103,13 @@ b3=ly3[32];
 
 for(int k=0;k<size;k++)
 {
-// #pragma HLS PIPELINE II=1
+
 x[0]=arr_in[k];
 for(int j=0;j<32;j++)
 {
 x[j+1]=h1[j];
 }
-
+//For Layer 1 
   for (int i = 0; i < hidden_size1; i++) {
 
     gates1[i] = bf1[i];
@@ -126,13 +124,6 @@ x[j+1]=h1[j];
          gates1[i + 3 * hidden_size1] += Wg1[j][i] * x[j];
        }
 
-//     gates1[i] = 1.0 / (1.0 + CORDIC(-gates1[i],1));
-//     gates1[i + hidden_size1] = 1.0 / (1.0 + CORDIC(-gates1[i + hidden_size1],1));
-//     gates1[i + 2 * hidden_size1] = 1.0 / (1.0 + CORDIC(-gates1[i + 2 * hidden_size1],1));
-//     gates1[i + 3 * hidden_size1] = CORDIC(gates1[i + 3 * hidden_size1],0);
-//
-//     c1[i] = gates1[i] * c1[i] + gates1[i + hidden_size1] * gates1[i + 3 * hidden_size1];
-//     h1[i] = gates1[i + 2 * hidden_size1] * CORDIC(c1[i],0);
          gates1[i] = 1.0 / (1.0 + exp(-gates1[i]));
          gates1[i + hidden_size1] = 1.0 / (1.0 + exp(-gates1[i + hidden_size1]));
          gates1[i + 2 * hidden_size1] = 1.0 / (1.0 + exp(-gates1[i + 2 * hidden_size1]));
@@ -163,13 +154,7 @@ x[j+1]=h1[j];
          gates2[i + 3 * hidden_size2] += Wg2[j][i] * x2[j];
        }
 
-//    gates2[i] = 1.0 / (1.0 + CORDIC(-gates2[i],1));
-//    gates2[i + hidden_size2] = 1.0 / (1.0 + CORDIC(-gates2[i + hidden_size2],1));
-//    gates2[i + 2 * hidden_size2] = 1.0 / (1.0 + CORDIC(-gates2[i + 2 * hidden_size2],1));
-//    gates2[i + 3 * hidden_size2] = CORDIC(gates2[i + 3 * hidden_size2],0);
-//
-//    c2[i] = gates2[i] * c2[i] + gates2[i + hidden_size2] * gates2[i + 3 * hidden_size2];
-//    h2[i] = gates2[i + 2 * hidden_size2] * CORDIC(c2[i],0);
+
     gates2[i] = 1.0 / (1.0 + exp(-gates2[i]));
     gates2[i + hidden_size2] = 1.0 / (1.0 + exp(-gates2[i + hidden_size2]));
     gates2[i + 2 * hidden_size2] = 1.0 / (1.0 + exp(-gates2[i + 2 * hidden_size2]));

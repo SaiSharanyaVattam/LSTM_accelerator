@@ -109,7 +109,7 @@ for(int j=0;j<32;j++)
 {
 x[j+1]=h1[j];
 }
-//For Layer 1 
+//Calculations in layer 1 
   for (int i = 0; i < hidden_size1; i++) {
 
     gates1[i] = bf1[i];
@@ -139,7 +139,7 @@ x[j+1]=h1[j];
  else
  x2[j]=h2[j-32];
   }
-  //For LAYER 2
+  //Calculations in layer 2
   for (int i = 0; i < hidden_size2; i++) {
 
     gates2[i] = bf2[i];
